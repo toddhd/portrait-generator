@@ -1,0 +1,13 @@
+# Secrets
+.env
+
+# Node
+node_modules/
+
+# Output files
+output/
+*.png
+
+# OS
+.DS_Store
+Thumbs.db
