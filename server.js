@@ -5,6 +5,7 @@ import crypto from "crypto";
 import express from "express";
 import multer from "multer";
 import sharp from "sharp";
+import open from "open";
 
 const app = express();
 const port = Number(process.env.PORT || 5177);
@@ -77,12 +78,14 @@ async function composeSheet(pngBuffers144) {
 
 function emotionPrompt(emotionLabel) {
   return [
-    "You are editing the provided reference image of a cute white cartoon kitten named Zigzag.",
-    "Create a 144x144 PNG portrait that matches the original art style exactly.",
-    "Keep the same framing, head size, pose, lighting, and clean white background.",
-    "Do not add text, props, extra characters, borders, or watermarks.",
-    `Change only Zigzag's facial expression and small body language to clearly show: ${emotionLabel}.`,
-    "Keep the character identity consistent with the input image.",
+    "You are editing the provided reference image.",
+    "Generate a single 144x144 PNG portrait that preserves the original subject identity and art style.",
+    "Keep the same framing, pose, head size, clothing, accessories, lighting, and background as the input image.",
+    "Do not add or remove characters or major elements.",
+    "Do not add text, captions, logos, borders, or watermarks.",
+    `Change only facial expression and subtle body language to clearly convey: ${emotionLabel}.`,
+    "Make the emotion readable but do not drastically exaggerate proportions or change the character design.",
+    "Return a clean portrait suitable for an RPG dialog portrait sheet.",
   ].join(" ");
 }
 
@@ -218,7 +221,7 @@ app.get("/", (req, res) => {
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Zigzag Portrait Sheet</title>
+  <title>Portrait Sheet</title>
   <style>
     body { font-family: system-ui, Arial; max-width: 980px; margin: 24px auto; padding: 0 16px; }
     .drop { border: 2px dashed #999; border-radius: 12px; padding: 18px; text-align: center; }
@@ -233,7 +236,7 @@ app.get("/", (req, res) => {
   </style>
 </head>
 <body>
-  <h1>Zigzag Portrait Sheet Generator</h1>
+  <h1>Portrait Sheet Generator</h1>
 
   <div class="row">
     <div class="col">
@@ -245,7 +248,7 @@ app.get("/", (req, res) => {
 
       <div class="col">
         <div class="label">Output folder</div>
-        <input type="text" id="outDir" placeholder="Example: C:\\\\dev\\\\zigzag-output" />
+        <input type="text" id="outDir" placeholder="Example: C:\\\\dev\\\\output" />
         <div class="hint">
           This is saved in your browser for next time.
           The app will write the final 576x288 sheet directly into this folder.
@@ -278,11 +281,11 @@ app.get("/", (req, res) => {
     function setLog(msg) { log.textContent = msg; }
 
     // Persist output folder between sessions
-    const savedDir = localStorage.getItem("zigzag_output_dir") || "";
+    const savedDir = localStorage.getItem("output_dir") || "";
     if (savedDir) outDir.value = savedDir;
 
     outDir.addEventListener("input", () => {
-      localStorage.setItem("zigzag_output_dir", outDir.value || "");
+      localStorage.setItem("output_dir", outDir.value || "");
     });
 
     function setFile(f) {
@@ -316,7 +319,7 @@ app.get("/", (req, res) => {
 
       const dir = (outDir.value || "").trim();
       if (!dir) {
-        setLog("Please enter an output folder path first, for example C:\\\\dev\\\\zigzag-output");
+        setLog("Please enter an output folder path first, for example C:\\\\dev\\\\output");
         return;
       }
 
@@ -402,6 +405,13 @@ app.get("/api/generate/status/:jobId", (req, res) => {
   res.json(job);
 });
 
-app.listen(port, () => {
-  console.log(`Open http://localhost:${port}`);
+app.listen(port, async () => {
+  const url = `http://localhost:${port}`;
+  console.log(`Portrait Generator running at ${url}`);
+
+  try {
+    await open(url);
+  } catch {
+    // If it fails (headless, SSH, etc), just ignore
+  }
 });

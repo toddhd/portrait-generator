@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Portrait Generator</title>
+  <meta name="description" content="Generate an 8 emotion portrait sheet from a single neutral image." />
+
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --card: #121a27;
+      --text: #e7eefc;
+      --muted: #a9b6cc;
+      --accent: #6aa6ff;
+      --accent2: #61d3a3;
+      --border: rgba(255, 255, 255, .08);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 600px at 20% 0%, rgba(106, 166, 255, .18), transparent 50%),
+        radial-gradient(1000px 500px at 80% 20%, rgba(97, 211, 163, .12), transparent 55%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none
+    }
+
+    a:hover {
+      text-decoration: underline
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 18px 60px
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px
+    }
+
+    .title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: .2px
+    }
+
+    .subtitle {
+      color: var(--muted);
+      max-width: 52ch
+    }
+
+    .ctaRow {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .04);
+      color: var(--text);
+      font-weight: 650
+    }
+
+    .btnPrimary {
+      background: linear-gradient(135deg, rgba(106, 166, 255, .95), rgba(97, 211, 163, .95));
+      border: 0;
+      color: #071019
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 14px;
+      margin-top: 18px
+    }
+
+    @media (max-width:880px) {
+      .grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .card {
+      background: rgba(18, 26, 39, .82);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .22);
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 18px
+    }
+
+    p {
+      margin: 10px 0;
+      color: var(--muted)
+    }
+
+    ul {
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: var(--muted)
+    }
+
+    code,
+    pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+
+    pre {
+      background: rgba(0, 0, 0, .35);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      overflow: auto;
+      margin: 12px 0 0;
+      color: #d8e5ff;
+    }
+
+    .video {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #0a0f18;
+    }
+
+    .video iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0
+    }
+
+    .pillRow {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px
+    }
+
+    .pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .04);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    footer {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    .small {
+      font-size: 13px
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="title">Portrait Generator</div>
+        <div class="subtitle">
+          Drop in a neutral portrait, generate 7 emotion variants, create a tile sheet for RPG style dialog portraits.
+        </div>
+      </div>
+
+      <div class="ctaRow">
+        <a class="btn btnPrimary" href="https://github.com/toddhd/portrait-generator" target="_blank"
+          rel="noreferrer">View on GitHub</a>
+        <a class="btn" href="https://github.com/toddhd/portrait-generator/releases" target="_blank"
+          rel="noreferrer">Download</a>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Demo</h2>
+
+        <div class="video" aria-label="Portrait Generator demo video">
+          <!-- Replace VIDEO_ID_HERE with your YouTube video id -->
+          <iframe src="https://www.youtube.com/watch?v=wP5ZvfK-KZU" title="Portrait Generator for RPG Maker"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <div class="pillRow" aria-label="Key features">
+          <div class="pill">Local app</div>
+          <div class="pill">Drag and drop</div>
+          <div class="pill">8 emotions</div>
+          <div class="pill">576x288 PNG output</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Quick start</h2>
+        <p>Requirements: Node 20 or newer.</p>
+
+        <ol class="small" style="color:var(--muted);padding-left:18px;margin:10px 0 0;">
+          <li>Clone the repo, or downoad the latest release zip</li>
+          <li>Install dependencies</li>
+          <li>Add your OpenAI API key in a local <code>.env</code> file</li>
+          <li>Run the app, open it in your browser</li>
+        </ol>
+
+        <pre><code># from the project folder
+npm install
+</code></pre>
+
+        <pre><code># create .env (copy from the example)
+# Windows PowerShell
+copy .env.example .env
+
+# macOS / Linux
+cp .env.example .env
+</code></pre>
+
+        <pre><code># then edit .env and set:
+OPENAI_API_KEY=your_key_here
+PORT=5177
+</code></pre>
+
+        <pre><code>npm start
+# then open:
+http://localhost:5177
+</code></pre>
+
+        <p class="small">
+          Note, your API key stays on your computer, this project does not include any API keys.
+        </p>
+      </section>
+    </div>
+
+    <section class="card" style="margin-top:14px;">
+      <h2>What gets generated</h2>
+      <p>
+        From one neutral portrait, the tool creates a single PNG sheet with these emotions:
+      </p>
+      <ul>
+        <li>Neutral</li>
+        <li>Happy</li>
+        <li>Serious / Determined</li>
+        <li>Angry</li>
+        <li>Sad</li>
+        <li>Surprised</li>
+        <li>Thinking / Concerned</li>
+        <li>Embarrassed</li>
+      </ul>
+    </section>
+
+    <footer>
+      Made for RPG style dialog portraits. Hosted with GitHub Pages.
+    </footer>
+  </div>
+</body>
+
+</html>
